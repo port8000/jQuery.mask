@@ -5,7 +5,7 @@
 This jQuery plugin masks and unmasks elements, so you can handle them without
 annoying user interaction taking place.
 
-See the [live demo](http://port8000.github.com/demo/demo.html).
+See the [live demo](http://port8000.github.com/jQuery.mask/demo/demo.html).
 
 ## Installation
 
