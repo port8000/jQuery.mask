@@ -159,7 +159,9 @@
 
     o = $.extend({
       // the effect to hide the mask, must return `this`
-      effect: function() { return this.fadeOut('fast'); }
+      effect: function() { return this.fadeOut('fast'); },
+      // a callback, when the mask is removed
+      callback: $.noop
     }, o);
 
     target.each(function() {
@@ -187,6 +189,7 @@
           }
 
           cur.trigger('unmasked');
+          o.callback.call(cur, mask);
 
         });
 
