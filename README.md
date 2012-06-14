@@ -5,6 +5,8 @@
 This jQuery plugin masks and unmasks elements, so you can handle them without
 annoying user interaction taking place.
 
+See the [live demo](http://port8000.github.com/demo/demo.html).
+
 ## Installation
 
 Place the jquery.mask.js file and the jquery.mask.css file on your server and
