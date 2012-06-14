@@ -43,6 +43,63 @@ describe("jQuery.mask", function() {
     } });
   });
 
+  it("should toggle the mask", function() {
+    target.toggleMask({ callback: function() {
+      expect(target.data('mask').length).toBe(1);
+    } });
+    target.toggleMask({ callback: function() {
+      expect(target.data('mask')).toBe(undefined);
+    } });
+    target.toggleMask({ callback: function() {
+      expect(target.data('mask')).toBe(undefined);
+    } }, false);
+    target.toggleMask({ callback: function() {
+      expect(target.data('mask').length).toBe(1);
+    } }, true);
+  });
+
+  it("should detect masking", function() {
+    expect(target.mask().isMasked()).toBe(true);
+    target.unmask({ callback: function() {
+      expect(target.isMasked()).toBe(false);
+    } });
+    expect(target.mask().filter(':masked').length).toBe(1);
+  });
+
+  it("should put content in the mask", function() {
+    target.mask({ content: '<big>test</big>' });
+    expect(target.data('mask').find('big').length).toBe(1);
+  });
+
+  it("should remove and restore tabindex", function() {
+    target.attr('tabindex', '3').mask();
+    expect(target.attr('tabindex')).toBe(-1);
+    target.unmask({
+      callback: function() {
+        expect(target.attr('tabindex')).toBe('3');
+      }
+    });
+  });
+
+  it("should fire events", function() {
+    var m = 0, u = 0;
+    target.on('masked', function() { m++; })
+          .on('unmasked', function() { u++; })
+          .mask({
+            effect: function() { return this; },
+            callback: function() {
+              this.unmask({
+                effect: function() { return this; },
+                callback: function() {
+                  window.setTimeout(function() {
+                    expect(m+u).toBe(2);
+                  }, 50);
+                }
+              });
+            }
+          });
+  });
+
   describe("The whole page", function() {
 
     it("should be masked with window", function() {
@@ -86,15 +143,6 @@ describe("jQuery.mask", function() {
       } });
     });
 
-  });
-
-  if("should toggle the mask", function() {
-    target.toggleMask({ callback: function() {
-      expect(target.data('mask').length).toBe(1);
-    } });
-    target.toggleMask({ callback: function() {
-      expect(target.data('mask')).toBe(undefined);
-    } });
   });
 
 });
