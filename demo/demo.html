@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../vendor/jquery.js"></script>
+    <script src="../src/jquery.mask.js"></script>
+    <link rel="stylesheet" href="../css/jquery.mask.css" />
+    <style>
+body {
+  margin: 0;
+  font: 100%/1.4 Arial,sans-serif;
+}
+#container {
+  margin: 22px;
+}
+p {
+  margin: 0 0 14px;
+}
+.demo {
+  display: block;
+  white-space: pre;
+  font: normal .9em/1.555 Monaco,"DejaVu Sans Mono",Inconsolata,monospace;
+  border: 1px solid #ccc;
+  padding: 13px;
+  background: #eee;
+  margin: 0 0 14px;
+  box-shadow: inset 0 5px 10px -3px rgba(0,0,0,.2);
+}
+.samp {
+  border: 1px solid #ccc;
+  padding: 13px;
+  background: #f4f4f4;
+  margin: 0 0 14px;
+  box-shadow: inset 0 5px 10px -3px rgba(255,255,255,.2);
+}
+hr {
+  background: #aaa;
+  color: #aaa;
+  border: none;
+  height: 3px;
+  margin: 0 0 14px;
+}
+    </style>
+    <title>jQuery.mask demo</title>
+  </head>
+  <body>
+    <div id="container">
+      <h1>jQuery.mask Plugin: Examples</h1>
+      <p>The examples showcase the jQuery.mask plugin. Use it to mask any
+      element or the whole page. See
+      <a href="https://port8000.github.com/jQuery.mask/">the project page</a>
+      for details.</p>
+      <hr/>
+      <p class="desc">
+        Mask a button on click and unmask it after 1 second:
+      </p>
+      <p class="samp">
+        <button id="demo1">click me to mask me</button>
+      </p>
+<script class="demo">$('#demo1').click(function() {
+  $(this).mask({
+    callback: function(mask) {
+      var current = this;
+      window.setTimeout(function() {
+        current.unmask();
+      }, 1000);
+    }
+  });
+});</script>
+      <hr/>
+      <p class="desc">
+        Get all masked elements from a collection:
+      </p>
+      <div class="samp" id="demo2">
+        <p>
+          <a href="#">unmasked</a>
+          <a href="#">masked</a>
+          <a href="#">unmasked</a>
+          <a href="#">masked</a>
+          <a href="#">unmasked</a>
+          <a href="#">masked</a>
+          <a href="#">unmasked</a>
+        </p>
+        <p><em id="demo2r"></em></p>
+      </div>
+      <script class="demo">var a = $('#demo2').find('a');
+a.filter(':odd').mask();
+$('#demo2r').text('' + a.filter(':masked').length + ' of ' +
+                  a.length + ' elements are masked.');</script>
+      <hr/>
+      <p class="desc">
+        Mask the entire page and unmask on click. (Also place some
+        content into the mask.)
+      </p>
+      <p class="samp">
+        <button id="demo3">click me to mask the window</button>
+      </p>
+      <script class="demo">$('#demo3').click(function() {
+  $(document).mask({
+    content: '<p style="background:white; cursor: pointer; text-align: center;">Click me to unmask!</p>',
+    callback: function(mask) {
+      var cur = this;
+      mask.click(function() {
+        cur.unmask();
+      });
+    }
+  });
+  return false;
+});</script>
+      <hr/>
+      <p class="desc">
+        Allow tabs and clicks to pass the mask.
+      </p>
+      <p class="samp">
+        <button id="demo4">click me</button>
+      </p>
+      <script class="demo">$('#demo4').mask({
+  focusable: true
+}).click(function() {
+  alert('Congratulations, you clicked the button.');
+  return false;
+});</script>
+      <hr/>
+      <p class="desc">
+        Mask the entire page with a bright mask and unmask on click.
+      </p>
+      <p class="samp">
+        <button id="demo5">click me to mask the window</button>
+      </p>
+      <script class="demo">$('#demo5').click(function() {
+  $(document).mask({
+    content: '<p style="background:black; color: white; cursor: pointer; text-align: center;">Click me to unmask!</p>',
+    callback: function(mask) {
+      var cur = this;
+      mask.click(function() {
+        cur.unmask();
+      });
+    },
+    addClass: 'ui-mask-bright'
+  });
+  return false;
+});</script>
+      <hr/>
+      <p class="desc">
+        Use events to follow the masking state.
+      </p>
+      <div class="samp">
+        <p>
+          <button id="demo6">click me</button>
+        </p>
+        <p><em id="demo6r"><span style="color:green">Button is unmasked.</span></em></p>
+      </div>
+      <script class="demo">$('#demo6').click(function() {
+  $(this).toggleMask({
+    focusable: true
+  });
+  return false;
+}).on('masked', function() {
+  $('#demo6r').html('<span style="color:red">Button is masked.</span>');
+}).on('unmasked', function() {
+  $('#demo6r').html('<span style="color:green">Button is unmasked.</span>');
+});</script>
+      <hr/>
+    </div>
+  </body>
+</html>
