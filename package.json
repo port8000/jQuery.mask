@@ -1,0 +1,43 @@
+{
+  "name": "jquery.mask",
+  "version": "0.9",
+  "title": "jQuery.mask",
+  "description": "Mask any element or the complete page",
+  "keywords": [
+    "jQuery",
+    "masking",
+    "layout",
+    "plugin"
+  ],
+  "author": {
+    "name": "Manuel Strehl",
+    "web": "http://www.manuel-strehl.de"
+  },
+  "homepage": "http://port8000.github.com/jQuery.mask/",
+  "bugs": {
+    "web": "https://github.com/port8000/jQuery.mask/issues/"
+  },
+  "licenses": [
+    {
+      "type": "GPLv2",
+      "url": "http://opensource.org/licenses/gpl-license.php"
+    },
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/port8000/jQuery.mask.git"
+    }
+  ],
+  "jquery": {
+    "dependencies": {
+      "jquery": ">=1.7"
+    },
+    "demo": "http://port8000.github.com/jQuery.mask/demo/demo.html",
+    "download": "https://github.com/port8000/jQuery.mask/zipball/master"
+  }
+}

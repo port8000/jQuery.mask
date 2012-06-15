@@ -1,6 +1,9 @@
 BROWSER := firefox
 
-build: jquery.mask.js
+build: package.json jquery.mask.js
+
+package.json: src/version
+	sed -i 's/^\( *"version":\).*$$/\1 "'$$(cat src/version | tr -d '\n')'",/' $^
 
 jquery.mask.js: src/jquery.mask.js src/version
 	{ echo -n '/*jQuery.mask '; \
