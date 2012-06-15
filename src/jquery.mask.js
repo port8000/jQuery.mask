@@ -8,6 +8,9 @@
  */
 (function(window, document, $, undefined) {
 
+  /**
+   * check if a global (window, body, ...) is in the current collection
+   */
   function check_global(target) {
     var is_global = false;
     // find out, if there is any "global" node in the current selection
@@ -19,6 +22,53 @@
           }
         });
     return is_global;
+  }
+
+  /**
+   * remove the mask now
+   */
+  function removeMaskNow(cur, mask, callback) {
+    mask = mask || cur.data('mask');
+    mask.remove();
+    cur.removeData('mask');
+
+    // reset the focus disabling
+    handleTabindex(cur, false);
+    cur.removeAttr('aria-busy')
+       .removeAttr('aria-disabled');
+    if (cur.data('_mask_class')) {
+      // if any special classes were set, remove them
+      cur.removeClass(cur.data('_mask_class'))
+          .removeData('_mask_class');
+    }
+
+    cur.trigger('unmasked');
+    if (callback) {
+      callback.call(cur, mask);
+    }
+  }
+
+  /**
+   * remove or restore the tabindex
+   */
+  function handleTabindex(root, remove) {
+    if (root[0] === document.body) {
+      root = root.children().not(root.data('mask'));
+    } else {
+      root = root.add('*', root);
+    }
+    root.each(function() {
+      var $this = $(this);
+      if (remove) {
+        $this.data('_mask_tabindex', $this.attr('tabindex'))
+              .attr('tabindex', -1).blur();
+      } else {
+        if ($this.data('_mask_tabindex') !== undefined) {
+          $this.attr('tabindex', $this.data('_mask_tabindex'))
+                .removeData('_mask_tabindex');
+        }
+      }
+    });
   }
 
   /**
@@ -61,8 +111,8 @@
           pos, w, h;
 
       if (mask) {
-        // do nothing, if the element is already masked
-        return;
+        // if the element is already masked, unmask first
+        removeMaskNow(cur, mask);
       }
 
       if (is_global) {
@@ -96,9 +146,7 @@
       cur.data('mask', mask).on('destroyed', function() {
             // if the element gets destroyed, and jquery.event.destroyed by
             // jQuery++ is in place, also remove its mask
-            $(this).unmask({
-              effect: function() { return this; } // a noop, go directly to removal
-            });
+            removeMaskNow($(this));
           });
       if (o.addClass) {
         cur.addClass(o.addClass);
@@ -107,10 +155,8 @@
 
       if (! o.focusable) {
         // prevent element from getting the focus
-        cur.data('_mask_tabindex', cur.attr('tabindex'))
-           .attr('tabindex', '-1')
-           .blur()
-           .attr('aria-busy', 'true')
+        handleTabindex(cur, true);
+        cur.attr('aria-busy', 'true')
            .attr('aria-disabled', 'true');
       } else {
         // let the mask being transparent for the mouse
@@ -171,26 +217,7 @@
       if (mask) {
 
         o.effect.call(mask.stop(true)).promise().done(function() {
-
-          mask.remove();
-          cur.removeData('mask');
-
-          if (cur.data('_mask_tabindex') !== undefined) {
-            // reset the focus disabling
-            cur.attr('tabindex', cur.data('_mask_tabindex'))
-               .removeData('_mask_tabindex')
-               .removeAttr('aria-busy')
-               .removeAttr('aria-disabled');
-          }
-          if (cur.data('_mask_class')) {
-            // if any special classes were set, remove them
-            cur.removeClass(cur.data('_mask_class'))
-               .removeData('_mask_class');
-          }
-
-          cur.trigger('unmasked');
-          o.callback.call(cur, mask);
-
+          removeMaskNow(cur, mask, o.callback);
         });
 
       }
