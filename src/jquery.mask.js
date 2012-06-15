@@ -71,6 +71,28 @@
     });
   }
 
+  function positionMask(cur, mask, is_global) {
+      var pos, w, h;
+
+      if (is_global) {
+        pos = {top: 0, left: 0};
+        // we want to catch any margins in this case, too
+        h = $(document.documentElement).outerHeight(true);
+        w = $(document.documentElement).outerWidth(true);
+      } else {
+        pos = cur.offset();
+        h = cur.outerHeight();
+        w = cur.outerWidth();
+      }
+      mask.css({
+        left: pos.left,
+        top: pos.top,
+        height: h,
+        width: w
+      });
+      return mask;
+  }
+
   /**
    * mask an element by an overlay
    *
@@ -107,23 +129,11 @@
     // mask each element individually
     target.each(function() {
       var cur = $(this),
-          mask = cur.data('mask'),
-          pos, w, h;
+          mask = cur.data('mask');
 
       if (mask) {
         // if the element is already masked, unmask first
         removeMaskNow(cur, mask);
-      }
-
-      if (is_global) {
-        pos = {top: 0, left: 0};
-        // we want to catch any margins in this case, too
-        h = $(document.documentElement).outerHeight(true);
-        w = $(document.documentElement).outerWidth(true);
-      } else {
-        pos = cur.offset();
-        h = cur.outerHeight();
-        w = cur.outerWidth();
       }
 
       // create the mask (and fill it with content, if wanted)
@@ -165,18 +175,13 @@
 
       // call the show effect
       o.effect.call(
-        // position the mask to meet the dimensions of the target
-        mask.css({
-              display: 'none',
-              left: pos.left,
-              top: pos.top,
-              height: h,
-              width: w
-            })
+          // position the mask to meet the dimensions of the target
+          positionMask(cur, mask, is_global).hide()
             // append it to the body
             .appendTo(document.body)
             // show it with the pre-defined effect
-            .delay(o.delay))
+            .delay(o.delay)
+        )
         // and fire the masked event afterwards
         .promise().done(function() {
           cur.trigger('masked', mask);
@@ -222,6 +227,25 @@
 
       }
 
+    });
+
+    return this;
+  };
+
+  /**
+   * adjust the mask's position (useful when target position changed)
+   */
+  $.fn.adjustMask = function() {
+    var target = this,
+        is_global = check_global(target);
+
+    if (is_global) {
+      target = $(document.body);
+    }
+
+    target.each(function() {
+      var cur = $(this);
+      positionMask(cur, cur.data('mask'), is_global);
     });
 
     return this;

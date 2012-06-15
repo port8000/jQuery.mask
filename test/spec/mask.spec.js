@@ -21,6 +21,26 @@ describe("jQuery.mask", function() {
     expect($('.ui-mask')[0]).toBe(target.data('mask')[0]);
   });
 
+  it("should call the callback function", function() {
+    runs(function() {
+      target.mask({
+        callback: function() { done = true; }
+      });
+    });
+    waitsForDone();
+    runs(function() {
+      expect(done).toBe(true);
+      done = false;
+      target.unmask({
+        callback: function() { done = true; }
+      });
+    });
+    waitsForDone();
+    runs(function() {
+      expect(done).toBe(true);
+    });
+  });
+
   it("should unmask an element", function() {
     runs(function() {
       target.mask().unmask({
@@ -152,6 +172,19 @@ describe("jQuery.mask", function() {
     });
   });
 
+  it("should leave tabindex alone when focusable", function() {
+    runs(function() {
+      target.attr('tabindex', '3').mask({
+        focusable: true,
+        callback: function() { done = true; }
+      });
+    });
+    waitsForDone();
+    runs(function() {
+      expect(target.attr('tabindex')).toEqual(3);
+    });
+  });
+
   it("should fire events", function() {
     var m = 0, u = 0;
     runs(function() {
@@ -182,6 +215,47 @@ describe("jQuery.mask", function() {
     expect(done).toBe(false);
     waits(60);
     expect(done).toBe(false);
+  });
+
+  it("should add a custom class to the target", function() {
+    expect(target.mask({
+      addClass: 'foo'
+    }).hasClass('foo')).toBe(true);
+  });
+
+  it("should add a custom class to the mask", function() {
+    expect(target.mask({
+      addMaskClass: 'foo'
+    }).data('mask').hasClass('foo')).toBe(true);
+  });
+
+  it("should adjust the mask's position correctly", function() {
+    target.css({
+      width: 101,
+      height: 123,
+      paddingTop: 7,
+      paddingRight: 4
+    });
+    var pos = target.offset(), w = target.outerWidth(),
+        h = target.outerHeight(), mask;
+    runs(function() {
+      target.mask({
+        callback: function() {
+          target.css({
+            padding: 0
+          });
+          mask = target.data('mask');
+        }
+      });
+    });
+    waitsFor(function() { return mask !== undefined; });
+    runs(function() {
+      expect(mask.width()).toBe(105);
+      expect(mask.height()).toBe(130);
+      target.adjustMask();
+      expect(mask.width()).toBe(101);
+      expect(mask.height()).toBe(123);
+    });
   });
 
   describe("The whole page", function() {
