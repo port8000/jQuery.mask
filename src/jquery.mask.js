@@ -27,7 +27,8 @@
   /**
    * remove the mask now
    */
-  function removeMaskNow(cur, mask, callback) {
+  function removeMask(cur, mask, callback) {
+    var k = 'mask.class';
     mask = mask || cur.data('mask');
     mask.remove();
     cur.removeData('mask');
@@ -36,10 +37,9 @@
     handleTabindex(cur, false);
     cur.removeAttr('aria-busy')
        .removeAttr('aria-disabled');
-    if (cur.data('_mask_class')) {
+    if (cur.data(k)) {
       // if any special classes were set, remove them
-      cur.removeClass(cur.data('_mask_class'))
-          .removeData('_mask_class');
+      cur.removeClass(cur.data(k)).removeData(k);
     }
 
     cur.trigger('unmasked');
@@ -52,6 +52,7 @@
    * remove or restore the tabindex
    */
   function handleTabindex(root, remove) {
+    var k = 'mask.tabindex';
     if (root[0] === document.body) {
       root = root.children().not(root.data('mask'));
     } else {
@@ -60,12 +61,12 @@
     root.each(function() {
       var $this = $(this);
       if (remove) {
-        $this.data('_mask_tabindex', $this.attr('tabindex'))
+        $this.data(k, $this.attr('tabindex'))
               .attr('tabindex', -1).blur();
       } else {
-        if ($this.data('_mask_tabindex') !== undefined) {
-          $this.attr('tabindex', $this.data('_mask_tabindex'))
-                .removeData('_mask_tabindex');
+        if ($this.data(k) !== undefined) {
+          $this.attr('tabindex', $this.data(k))
+                .removeData(k);
         }
       }
     });
@@ -133,7 +134,7 @@
 
       if (mask) {
         // if the element is already masked, unmask first
-        removeMaskNow(cur, mask);
+        removeMask(cur, mask);
       }
 
       // create the mask (and fill it with content, if wanted)
@@ -156,11 +157,11 @@
       cur.data('mask', mask).on('destroyed', function() {
             // if the element gets destroyed, and jquery.event.destroyed by
             // jQuery++ is in place, also remove its mask
-            removeMaskNow($(this));
+            removeMask($(this));
           });
       if (o.addClass) {
         cur.addClass(o.addClass);
-        cur.data('_mask_class', o.addClass);
+        cur.data('mask.class', o.addClass);
       }
 
       if (! o.focusable) {
@@ -169,7 +170,7 @@
         cur.attr('aria-busy', 'true')
            .attr('aria-disabled', 'true');
       } else {
-        // let the mask being transparent for the mouse
+        // let the mask be transparent for the mouse
         mask.css('pointer-events', 'none');
       }
 
@@ -222,7 +223,7 @@
       if (mask) {
 
         o.effect.call(mask.stop(true)).promise().done(function() {
-          removeMaskNow(cur, mask, o.callback);
+          removeMask(cur, mask, o.callback);
         });
 
       }
