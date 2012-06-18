@@ -11,8 +11,13 @@ describe("jQuery.mask", function() {
   });
 
   afterEach(function () {
+    $('.ui-mask').each(function() {
+      var $this = $(this), p = $this.data('mask.parent');
+      if (p.length) {
+        p.unmask({ effect: function() { return this; } });
+      }
+    });
     target.remove();
-    $('.ui-mask').remove();
   });
 
   it("should mask an element", function() {
@@ -258,6 +263,56 @@ describe("jQuery.mask", function() {
     });
   });
 
+  it('should cancel events on the target', function() {
+    var t;
+    runs(function() {
+      $(document).on('click', function(e) {
+        t = e.target;
+      });
+      target.mask().trigger('click');
+    });
+    waits(50);
+    runs(function() {
+      expect(t).toBeUndefined();
+    });
+  });
+
+  it('should restore events on unmasking', function() {
+    var t;
+    runs(function() {
+      $(document).on('click', function(e) {
+        t = e.target;
+      });
+      target.mask().unmask({
+        callback: function() { done = true; }
+      });
+    });
+    waitsForDone();
+    runs(function() {
+      target.trigger('click');
+    });
+    waits(50);
+    runs(function() {
+      expect(t).toBe(target[0]);
+    });
+  });
+
+  it('should let events through from the mask', function() {
+    var t, i;
+    runs(function() {
+      $(document).on('click', function(e) {
+        t = e.target;
+      });
+      i = target.mask({
+        content: '<input/>'
+      }).data('mask').find('input').trigger('click');
+    });
+    waits(50);
+    runs(function() {
+      expect(t).toBe(i[0]);
+    });
+  });
+
   describe("The whole page", function() {
     function maskPage(d) {
       return function() {
@@ -287,6 +342,44 @@ describe("jQuery.mask", function() {
     it("should be masked with any of those in the collection", function() {
       var i = $('<i></i>').appendTo('body').add(document);
       maskPage(i)();
+    });
+
+    it("should receive events after masking", function() {
+      var t;
+      runs(function() {
+        $(document).on('click', function(e) {
+          t = e.target;
+        });
+        $(document).mask().unmask({
+          callback: function() { done = true; }
+        });
+      });
+      waitsForDone();
+      runs(function() {
+        $('body').trigger('click');
+      });
+      waits(50);
+      runs(function() {
+        expect(t).toBe(document.body);
+      });
+    });
+
+    it("should receive events from mask content", function() {
+      var t, i;
+      runs(function() {
+        $(document).on('click', function(e) {
+          t = e.target;
+        });
+        $(document).mask({
+          content: '<input/>'
+        });
+        i = $('body').data('mask').find('input');
+        i.trigger('click');
+      });
+      waits(50);
+      runs(function() {
+        expect(t).toBe(i[0]);
+      });
     });
 
   });

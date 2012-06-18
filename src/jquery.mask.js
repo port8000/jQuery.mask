@@ -35,6 +35,7 @@
 
     // reset the focus disabling
     handleTabindex(cur, false);
+    restoreEvents(cur);
     cur.removeAttr('aria-busy')
        .removeAttr('aria-disabled');
     if (cur.data(k)) {
@@ -70,6 +71,33 @@
         }
       }
     });
+  }
+
+  /**
+   * make sure, that events fired on the masked content get cancelled
+   */
+  function preventEvents(cur) {
+    var mask = cur.data('mask');
+    function handler(e) {
+      if(mask !== e.target && ! mask.has(e.target).length) {
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+      }
+    };
+    cur.data('mask.eventhandler', handler);
+    cur.bind("click change focus select mousedown mouseup keydown keypress", handler);
+  }
+
+  /**
+   * restore normal event behaviour on masked elements
+   */
+  function restoreEvents(cur) {
+    var handler = cur.data('mask.eventhandler');
+    if (handler) {
+      cur.unbind("click change focus select mousedown mouseup keydown keypress", handler);
+      cur.removeData('mask.eventhandler');
+    }
   }
 
   function positionMask(cur, mask, is_global) {
@@ -140,7 +168,7 @@
       // create the mask (and fill it with content, if wanted)
       mask = $('<div class="ui-mask">'+
                  '<div class="ui-mask-content"></div>'+
-               '</div>').data('mask-parent', cur);
+               '</div>').data('mask.parent', cur);
       if (o.addMaskClass) {
         mask.addClass(o.addMaskClass);
       }
@@ -167,6 +195,7 @@
       if (! o.focusable) {
         // prevent element from getting the focus
         handleTabindex(cur, true);
+        preventEvents(cur);
         cur.attr('aria-busy', 'true')
            .attr('aria-disabled', 'true');
       } else {
