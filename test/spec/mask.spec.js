@@ -313,6 +313,27 @@ describe("jQuery.mask", function() {
     });
   });
 
+  it('should accept "null" as effect', function() {
+    var m = 0;
+    runs(function() {
+      target.on('masked unmasked', function() { m++; })
+            .mask({
+              effect: null
+            });
+    });
+    waits(100);
+    runs(function() {
+      expect(m).toBe(1);
+      target.unmask({
+        effect: null
+      });
+    });
+    waits(100);
+    runs(function() {
+      expect(m).toBe(2);
+    });
+  });
+
   describe("The whole page", function() {
     function maskPage(d) {
       return function() {

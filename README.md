@@ -65,7 +65,7 @@ Finally, you can react on masking events:
 Use the following options to configure jQuery.mask:
 
 * `effect` - the effect function to display the mask. For no effect at all use
-  `function() { return this; }`
+  `null`
 * `addClass` - additional class to give to the masked target element.
 * `addMaskClass` - additional class to give to the mask.
 * `content` - content to place into the mask. The default is to keep the mask

@@ -84,7 +84,7 @@
         e.preventDefault();
         return false;
       }
-    };
+    }
     cur.data('mask.eventhandler', handler);
     cur.bind("click change focus select mousedown mouseup keydown keypress", handler);
   }
@@ -154,6 +154,10 @@
       // what to do after masking
       callback: $.noop
     }, o);
+
+    if (! o.effect) {
+      o.effect = function() { return this; };
+    }
 
     // mask each element individually
     target.each(function() {
@@ -244,6 +248,10 @@
       // a callback, when the mask is removed
       callback: $.noop
     }, o);
+
+    if (! o.effect) {
+      o.effect = function() { return this; };
+    }
 
     target.each(function() {
       var cur = $(this),
