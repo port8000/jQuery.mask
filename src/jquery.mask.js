@@ -62,10 +62,10 @@
     root.each(function() {
       var $this = $(this);
       if (remove) {
-        $this.data(k, $this.attr('tabindex'))
+        $this.data(k, $this.attr('tabindex') || null)
               .attr('tabindex', -1).blur();
       } else {
-        if ($this.data(k) !== undefined) {
+        if ($this.data(k) != null) {
           $this.attr('tabindex', $this.data(k))
                 .removeData(k);
         }
