@@ -106,8 +106,8 @@
       if (is_global) {
         pos = {top: 0, left: 0};
         // we want to catch any margins in this case, too
-        h = $(document.documentElement).outerHeight(true);
-        w = $(document.documentElement).outerWidth(true);
+        h = Math.max($(document.documentElement).outerHeight(true), $(window).outerHeight(true));
+        w = Math.max($(document.documentElement).outerWidth(true), $(window).outerWidth(true));
       } else {
         pos = cur.offset();
         h = cur.outerHeight();
