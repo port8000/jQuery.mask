@@ -33,6 +33,24 @@ p {
   margin: 0 0 14px;
   box-shadow: inset 0 5px 10px -3px rgba(255,255,255,.2);
 }
+.content {
+  cursor: pointer;
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 40px;
+  line-height: 40px;
+  margin: -10px 0 0 -150px;
+}
+.white.content {
+  background: white;
+}
+.black.content {
+  background: black;
+  color: white;
+}
 hr {
   background: #aaa;
   color: #aaa;
@@ -73,20 +91,20 @@ hr {
       </p>
       <div class="samp" id="demo2">
         <p>
-          <a href="#">unmasked</a>
-          <a href="#">masked</a>
-          <a href="#">unmasked</a>
-          <a href="#">masked</a>
-          <a href="#">unmasked</a>
-          <a href="#">masked</a>
-          <a href="#">unmasked</a>
+          <b>unmasked</b>
+          <b>masked</b>
+          <b>unmasked</b>
+          <b>masked</b>
+          <b>unmasked</b>
+          <b>masked</b>
+          <b>unmasked</b>
         </p>
         <p><em id="demo2r"></em></p>
       </div>
-      <script class="demo">var a = $('#demo2').find('a');
-a.filter(':odd').mask();
-$('#demo2r').text('' + a.filter(':masked').length + ' of ' +
-                  a.length + ' elements are masked.');</script>
+      <script class="demo">var b = $('#demo2').find('b');
+b.filter(':odd').mask();
+$('#demo2r').text('' + b.filter(':masked').length + ' of ' +
+                  b.length + ' elements are masked.');</script>
       <hr/>
       <p class="desc">
         Mask the entire page and unmask on click. (Also place some
@@ -97,7 +115,7 @@ $('#demo2r').text('' + a.filter(':masked').length + ' of ' +
       </p>
       <script class="demo">$('#demo3').click(function() {
   $(document).mask({
-    content: '<p style="background:white; cursor: pointer; text-align: center;">Click me to unmask!</p>',
+    content: '<p class="white content">Click me to unmask!</p>',
     callback: function(mask) {
       var cur = this;
       mask.click(function() {
@@ -129,7 +147,7 @@ $('#demo2r').text('' + a.filter(':masked').length + ' of ' +
       </p>
       <script class="demo">$('#demo5').click(function() {
   $(document).mask({
-    content: '<p style="background:black; color: white; cursor: pointer; text-align: center;">Click me to unmask!</p>',
+    content: '<p class="black content">Click me to unmask!</p>',
     callback: function(mask) {
       var cur = this;
       mask.click(function() {

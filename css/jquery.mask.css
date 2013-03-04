@@ -19,3 +19,7 @@
   margin: -8px 0 0 -8px;
   background: transparent url(load.gif) no-repeat center;
 }
+
+.ui-mask-bright .ui-mask-empty {
+  background-image: url(load-bright.gif);
+}

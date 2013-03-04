@@ -162,7 +162,8 @@
     // mask each element individually
     target.each(function() {
       var cur = $(this),
-          mask = cur.data('mask');
+          mask = cur.data('mask'),
+          mdiv;
 
       if (mask) {
         // if the element is already masked, unmask first
@@ -170,20 +171,20 @@
       }
 
       // create the mask (and fill it with content, if wanted)
-      mask = $('<div class="ui-mask">'+
-                 '<div class="ui-mask-content"></div>'+
-               '</div>').data('mask.parent', cur);
+      mask = $('<div class="ui-mask"/>').data('mask.parent', cur);
+      mdiv = $('<div class="ui-mask-content"></div>')
+               .appendTo(mask);
       if (o.addMaskClass) {
         mask.addClass(o.addMaskClass);
       }
       if (o.content) {
         if (typeof o.content === 'string') {
-          mask.find('div').html(o.content);
+          mdiv.html(o.content);
         } else {
-          mask.find('div').append(o.content);
+          mdiv.append(o.content);
         }
       } else {
-        mask.find('div').addClass('ui-mask-empty');
+        mdiv.addClass('ui-mask-empty');
       }
 
       cur.data('mask', mask).on('destroyed', function() {
