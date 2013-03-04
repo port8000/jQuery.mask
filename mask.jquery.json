@@ -1,7 +1,7 @@
 {
-  "name": "jqmask",
+  "name": "masked",
   "version": "0.9.3",
-  "title": "jQuery.Mask",
+  "title": "jQuery.mask",
   "description": "Mask any element or the complete page",
   "keywords": [
     "masking",
