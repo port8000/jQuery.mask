@@ -1,6 +1,11 @@
 {
   "name": "jquery.mask",
   "version": "0.9.3",
-  "main": "jquery.mask.js",
+  "main": [
+    "jquery.mask.js",
+    "css/jquery.mask.min.css",
+    "css/load.gif",
+    "css/load-bright.gif"
+  ],
   "author": "Port 8000"
 }

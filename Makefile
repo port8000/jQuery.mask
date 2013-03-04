@@ -1,9 +1,10 @@
 BROWSER := firefox
+SPEC_FILES := package.json mask.jquery.json component.json
 
-build: package.json mask.jquery.json component.json \
+build: $(SPEC_FILES) \
        jquery.mask.js css/jquery.mask.min.css
 
-package.json mask.jquery.json component.json: src/version
+$(SPEC_FILES): src/version
 	@echo "* expose version in $@"
 	@sed -i 's/^\( *"version":\).*$$/\1 "'$$(cat src/version | tr -d '\n')'",/' $@
 
@@ -21,6 +22,12 @@ css/jquery.mask.min.css: css/jquery.mask.css
 
 test:
 	jshint src/jquery.mask.js
-	$(BROWSER) file://$$(pwd)/test/SpecRunner.html &
+	@for JSON in $(SPEC_FILES); do \
+		echo "* lint $$JSON"; \
+		jsonlint -q $$JSON; \
+		if [ $$? != 0 ]; then exit 1; fi; \
+	done
+	@echo "* run browser tests in $(BROWSER)"
+	@$(BROWSER) file://$$(pwd)/test/SpecRunner.html &
 
 .PHONY: build test
