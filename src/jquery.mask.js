@@ -9,6 +9,13 @@
 (function(window, document, $, undefined) {
 
   /**
+   * Events which should be prevented on masked elements
+   */
+  var interactionEvents = ["click", "dblclick", "change", "focus", "select",
+      "submit", "mousedown", "mouseup", "keydown", "keyup",
+      "keypress"].join(" ");
+
+  /**
    * check if a global (window, body, ...) is in the current collection
    */
   function check_global(target) {
@@ -79,6 +86,7 @@
   function preventEvents(cur) {
     var mask = cur.data('mask');
     function handler(e) {
+      // we double-check, that the event doesn't happen in the mask
       if(mask !== e.target && ! mask.has(e.target).length) {
         e.stopPropagation();
         e.preventDefault();
@@ -86,7 +94,7 @@
       }
     }
     cur.data('mask.eventhandler', handler);
-    cur.bind("click change focus select mousedown mouseup keydown keypress", handler);
+    cur.bind(interactionEvents, handler);
   }
 
   /**
@@ -95,11 +103,14 @@
   function restoreEvents(cur) {
     var handler = cur.data('mask.eventhandler');
     if (handler) {
-      cur.unbind("click change focus select mousedown mouseup keydown keypress", handler);
+      cur.unbind(interactionEvents, handler);
       cur.removeData('mask.eventhandler');
     }
   }
 
+  /**
+   * set the CSS position and size of the mask
+   */
   function positionMask(cur, mask, is_global) {
       var pos, w, h;
 
