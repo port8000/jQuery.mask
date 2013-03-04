@@ -1,0 +1,31 @@
+{
+  "name": "mask",
+  "version": "0.9.3",
+  "title": "jQuery.Mask",
+  "description": "Mask any element or the complete page",
+  "keywords": [
+    "masking",
+    "layout"
+  ],
+  "author": {
+    "name": "Port 8000",
+    "url": "http://www.port8000.de"
+  },
+  "homepage": "http://port8000.github.com/jQuery.mask/",
+  "bugs": "https://github.com/port8000/jQuery.mask/issues/",
+  "licenses": [
+    {
+      "type": "GPLv2",
+      "url": "http://opensource.org/licenses/gpl-license.php"
+    },
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.7"
+  },
+  "demo": "http://port8000.github.com/jQuery.mask/demo/demo.html",
+  "download": "https://github.com/port8000/jQuery.mask/zipball/master"
+}
