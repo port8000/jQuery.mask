@@ -320,14 +320,5 @@
   $.expr[':'].masked = function(obj) {
     return $(obj).isMasked();
   };
-  
-  $(window).on('resize', function () {
-        window.setTimeout(function () {
-            if ($(document.body).isMasked()) {
-                //need to do it twice because of scroll disappearing
-                $(document.body).adjustMask().adjustMask();
-            }
-        }, 1);
-    });
 
 })(this, this.document, jQuery);
