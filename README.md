@@ -89,4 +89,5 @@ The plugin is released under both the GPL and MIT License.
 The plugin was written by Manuel Strehl,
 [@m_strehl](http://twitter.com/m_strehl), and open-sourced by Port 8000 UG.
 
-Special thanks to cartmanez for enhancing jQuery 1.7 support.
+Special thanks to [cartmanez](https://github.com/cartmanez) for enhancing
+jQuery 1.7 support.
